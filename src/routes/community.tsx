@@ -1,0 +1,99 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { Users, CalendarDays, Clock } from "lucide-react";
+import { toast } from "sonner";
+
+import { AppShell, PageHeader } from "@/components/limo/AppShell";
+import { SaveTag } from "@/components/limo/bits";
+import { Button } from "@/components/ui/button";
+import { CAR_TIERS, cityName } from "@/lib/limo/data";
+import { t } from "@/lib/limo/i18n";
+import { formatEGP, perSeat, riderCap } from "@/lib/limo/pricing";
+import { useStore } from "@/lib/limo/store";
+
+export const Route = createFileRoute("/community")({
+  head: () => ({
+    meta: [
+      { title: "رحلات المشاركة — ليمو" },
+      {
+        name: "description",
+        content: "انضم لرحلة ليموزين محجوزة وشارك التكلفة مع ركاب آخرين ووفّر حتى 60%.",
+      },
+      { property: "og:title", content: "رحلات المشاركة — ليمو" },
+      { property: "og:description", content: "شارك رحلة محجوزة وادفع سعر المقعد فقط." },
+    ],
+  }),
+  component: CommunityPage,
+});
+
+function CommunityPage() {
+  const { lang, shared, joinShared } = useStore();
+
+  return (
+    <AppShell>
+      <PageHeader title={t("community", lang)} subtitle={t("communityDesc", lang)} />
+
+      <div className="space-y-3 px-4">
+        {shared.length === 0 ? (
+          <div className="card-surface flex flex-col items-center gap-3 p-8 text-center">
+            <div className="flex size-16 items-center justify-center rounded-full bg-secondary text-primary">
+              <Users className="size-8" />
+            </div>
+            <p className="font-semibold">{t("emptyCommunity", lang)}</p>
+            <p className="text-sm text-muted-foreground">{t("emptyCommunitySub", lang)}</p>
+          </div>
+        ) : null}
+
+        {shared.map((trip) => {
+          const cap = riderCap(trip.airport);
+          const seatsLeft = cap - trip.riders;
+          const priceIfJoin = perSeat(trip.base, trip.riders + 1);
+          const tier = CAR_TIERS.find((c) => c.id === trip.tierId)!;
+          return (
+            <div key={trip.id} className="card-surface space-y-3 p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-base font-bold">
+                    {cityName(trip.from, lang)} ← {cityName(trip.to, lang)}
+                  </h3>
+                  <p className="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                    <span className="inline-flex items-center gap-1">
+                      <CalendarDays className="size-3.5" /> {trip.date}
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <Clock className="size-3.5" /> {trip.time}
+                    </span>
+                    <span>{lang === "ar" ? tier.ar : tier.en}</span>
+                  </p>
+                </div>
+                <SaveTag />
+              </div>
+
+              <div className="flex items-end justify-between rounded-lg bg-secondary p-3">
+                <div>
+                  <p className="text-[11px] text-muted-foreground">{t("pricePerSeat", lang)}</p>
+                  <p className="text-lg font-extrabold text-success">
+                    {formatEGP(priceIfJoin, lang)}
+                  </p>
+                </div>
+                <p className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground">
+                  <Users className="size-4" /> {seatsLeft} {t("seatsLeft", lang)}
+                </p>
+              </div>
+
+              <Button
+                className="w-full"
+                size="lg"
+                onClick={() => {
+                  joinShared(trip.id);
+                  toast.success(t("joined", lang));
+                }}
+              >
+                {t("joinNow", lang)} · {formatEGP(priceIfJoin, lang)}
+              </Button>
+            </div>
+          );
+        })}
+      </div>
+    </AppShell>
+  );
+}
