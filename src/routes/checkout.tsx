@@ -28,11 +28,12 @@ function CheckoutPage() {
   const { lang, draft, wallet, book } = useStore();
   const navigate = useNavigate();
   const [useWallet, setUseWallet] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
   const ready = Boolean(draft.from && draft.to && draft.date && draft.tierId);
 
   useEffect(() => {
-    if (!ready) navigate({ to: "/" });
-  }, [ready, navigate]);
+    if (!ready && !submitted) navigate({ to: "/" });
+  }, [ready, submitted, navigate]);
 
   if (!ready) return null;
 
@@ -43,6 +44,7 @@ function CheckoutPage() {
   const remaining = total - walletUsed;
 
   const confirm = () => {
+    setSubmitted(true);
     book({ tierId: tier.id, base, paid: total, walletUsed });
     toast.success(t("booked", lang));
     navigate({ to: "/trips" });
