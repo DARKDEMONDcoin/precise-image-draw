@@ -15,6 +15,8 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as OptionsRouteImport } from './routes/options'
 import { Route as ReturnsRouteImport } from './routes/returns'
+import { Route as TripsRouteImport } from './routes/trips'
+import { Route as WalletRouteImport } from './routes/wallet'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +48,16 @@ const ReturnsRoute = ReturnsRouteImport.update({
   path: '/returns',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TripsRoute = TripsRouteImport.update({
+  id: '/trips',
+  path: '/trips',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WalletRoute = WalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +66,8 @@ export interface FileRoutesByFullPath {
   '/community': typeof CommunityRoute
   '/options': typeof OptionsRoute
   '/returns': typeof ReturnsRoute
+  '/trips': typeof TripsRoute
+  '/wallet': typeof WalletRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +76,8 @@ export interface FileRoutesByTo {
   '/community': typeof CommunityRoute
   '/options': typeof OptionsRoute
   '/returns': typeof ReturnsRoute
+  '/trips': typeof TripsRoute
+  '/wallet': typeof WalletRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,13 +87,30 @@ export interface FileRoutesById {
   '/community': typeof CommunityRoute
   '/options': typeof OptionsRoute
   '/returns': typeof ReturnsRoute
+  '/trips': typeof TripsRoute
+  '/wallet': typeof WalletRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/checkout' | '/community' | '/options' | '/returns'
+    | '/'
+    | '/auth'
+    | '/checkout'
+    | '/community'
+    | '/options'
+    | '/returns'
+    | '/trips'
+    | '/wallet'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/checkout' | '/community' | '/options' | '/returns'
+  to:
+    | '/'
+    | '/auth'
+    | '/checkout'
+    | '/community'
+    | '/options'
+    | '/returns'
+    | '/trips'
+    | '/wallet'
   id:
     | '__root__'
     | '/'
@@ -86,6 +119,8 @@ export interface FileRouteTypes {
     | '/community'
     | '/options'
     | '/returns'
+    | '/trips'
+    | '/wallet'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -95,6 +130,8 @@ export interface RootRouteChildren {
   CommunityRoute: typeof CommunityRoute
   OptionsRoute: typeof OptionsRoute
   ReturnsRoute: typeof ReturnsRoute
+  TripsRoute: typeof TripsRoute
+  WalletRoute: typeof WalletRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -141,6 +178,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReturnsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trips': {
+      id: '/trips'
+      path: '/trips'
+      fullPath: '/trips'
+      preLoaderRoute: typeof TripsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wallet': {
+      id: '/wallet'
+      path: '/wallet'
+      fullPath: '/wallet'
+      preLoaderRoute: typeof WalletRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -151,6 +202,8 @@ const rootRouteChildren: RootRouteChildren = {
   CommunityRoute: CommunityRoute,
   OptionsRoute: OptionsRoute,
   ReturnsRoute: ReturnsRoute,
+  TripsRoute: TripsRoute,
+  WalletRoute: WalletRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
