@@ -24,10 +24,6 @@ export const Route = createFileRoute("/auth")({
 
 type Step = "phone" | "otp" | "profile";
 
-export default function _unused() {
-  return null;
-}
-
 function AuthPage() {
   const { lang, setUser } = useStore();
   const navigate = useNavigate();
