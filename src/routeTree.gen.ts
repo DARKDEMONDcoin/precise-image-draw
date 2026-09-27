@@ -14,7 +14,9 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as OptionsRouteImport } from './routes/options'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ReturnsRouteImport } from './routes/returns'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TripsRouteImport } from './routes/trips'
 import { Route as WalletRouteImport } from './routes/wallet'
 
@@ -43,9 +45,19 @@ const OptionsRoute = OptionsRouteImport.update({
   path: '/options',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReturnsRoute = ReturnsRouteImport.update({
   id: '/returns',
   path: '/returns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TripsRoute = TripsRouteImport.update({
@@ -65,7 +77,9 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/community': typeof CommunityRoute
   '/options': typeof OptionsRoute
+  '/profile': typeof ProfileRoute
   '/returns': typeof ReturnsRoute
+  '/settings': typeof SettingsRoute
   '/trips': typeof TripsRoute
   '/wallet': typeof WalletRoute
 }
@@ -75,7 +89,9 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/community': typeof CommunityRoute
   '/options': typeof OptionsRoute
+  '/profile': typeof ProfileRoute
   '/returns': typeof ReturnsRoute
+  '/settings': typeof SettingsRoute
   '/trips': typeof TripsRoute
   '/wallet': typeof WalletRoute
 }
@@ -86,7 +102,9 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/community': typeof CommunityRoute
   '/options': typeof OptionsRoute
+  '/profile': typeof ProfileRoute
   '/returns': typeof ReturnsRoute
+  '/settings': typeof SettingsRoute
   '/trips': typeof TripsRoute
   '/wallet': typeof WalletRoute
 }
@@ -98,7 +116,9 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/community'
     | '/options'
+    | '/profile'
     | '/returns'
+    | '/settings'
     | '/trips'
     | '/wallet'
   fileRoutesByTo: FileRoutesByTo
@@ -108,7 +128,9 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/community'
     | '/options'
+    | '/profile'
     | '/returns'
+    | '/settings'
     | '/trips'
     | '/wallet'
   id:
@@ -118,7 +140,9 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/community'
     | '/options'
+    | '/profile'
     | '/returns'
+    | '/settings'
     | '/trips'
     | '/wallet'
   fileRoutesById: FileRoutesById
@@ -129,7 +153,9 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   CommunityRoute: typeof CommunityRoute
   OptionsRoute: typeof OptionsRoute
+  ProfileRoute: typeof ProfileRoute
   ReturnsRoute: typeof ReturnsRoute
+  SettingsRoute: typeof SettingsRoute
   TripsRoute: typeof TripsRoute
   WalletRoute: typeof WalletRoute
 }
@@ -171,11 +197,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OptionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/returns': {
       id: '/returns'
       path: '/returns'
       fullPath: '/returns'
       preLoaderRoute: typeof ReturnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/trips': {
@@ -201,7 +241,9 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   CommunityRoute: CommunityRoute,
   OptionsRoute: OptionsRoute,
+  ProfileRoute: ProfileRoute,
   ReturnsRoute: ReturnsRoute,
+  SettingsRoute: SettingsRoute,
   TripsRoute: TripsRoute,
   WalletRoute: WalletRoute,
 }
