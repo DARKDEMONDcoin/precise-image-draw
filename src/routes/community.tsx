@@ -3,6 +3,7 @@ import { Users, CalendarDays, Clock } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell, PageHeader } from "@/components/limo/AppShell";
+import { formatAppDate } from "@/components/limo/DateField";
 import { SaveTag } from "@/components/limo/bits";
 import { Button } from "@/components/ui/button";
 import { CAR_TIERS, cityName } from "@/lib/limo/data";
@@ -86,7 +87,7 @@ function CommunityPage() {
                   </h3>
                   <p className="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-1">
-                      <CalendarDays className="size-3.5" /> {trip.date}
+                      <CalendarDays className="size-3.5" /> {formatAppDate(trip.date, lang)}
                     </span>
                     <span className="inline-flex items-center gap-1">
                       <Clock className="size-3.5" /> {trip.time}

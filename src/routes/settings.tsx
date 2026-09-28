@@ -38,7 +38,7 @@ function SettingsPage() {
                 variant={lang === l ? "default" : "outline"}
                 className={cn("h-12", lang === l && "border-primary")}
               >
-                {l === "ar" ? "العربية" : "English"}
+                {l === "ar" ? "العربية" : lang === "ar" ? "الإنجليزية" : "English"}
               </Button>
             ))}
           </div>
