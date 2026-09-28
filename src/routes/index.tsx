@@ -4,10 +4,13 @@ import { ArrowUpDown, Users, CornerUpLeft, Wallet as WalletIcon, Car } from "luc
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/limo/AppShell";
+import { DateField } from "@/components/limo/DateField";
+import { Onboarding } from "@/components/limo/Onboarding";
 import { SaveTag } from "@/components/limo/bits";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -40,12 +43,22 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const { lang, user, draft, setDraft, wallet } = useStore();
+  const { lang, user, draft, setDraft, wallet, onboardingSeen, completeOnboarding } = useStore();
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
+  const [communityFrom, setCommunityFrom] = useState<CityId | null>(null);
+  const [communityTo, setCommunityTo] = useState<CityId | null>(null);
+  const [communityDate, setCommunityDate] = useState<string | null>(null);
+  const [communityError, setCommunityError] = useState<string | null>(null);
 
   const maxRiders = draft.airport ? 2 : 3;
-  const todayStr = new Date().toISOString().slice(0, 10);
+  if (!onboardingSeen && !user) {
+    return (
+      <AppShell nav={false}>
+        <Onboarding onComplete={completeOnboarding} />
+      </AppShell>
+    );
+  }
 
   if (!user) {
     return (
@@ -86,6 +99,22 @@ function HomePage() {
     navigate({ to: "/options" });
   };
 
+  const searchCommunity = () => {
+    if (!communityFrom || !communityTo || !communityDate) {
+      setCommunityError(t("errRequired", lang));
+      return;
+    }
+    if (communityFrom === communityTo) {
+      setCommunityError(t("errSameCity", lang));
+      return;
+    }
+    setCommunityError(null);
+    navigate({
+      to: "/community",
+      search: { from: communityFrom, to: communityTo, date: communityDate },
+    });
+  };
+
   return (
     <AppShell>
       <div className="bg-primary px-5 pb-10 pt-7 text-primary-foreground">
@@ -103,82 +132,110 @@ function HomePage() {
       </div>
 
       <div className="-mt-6 px-4">
-        <div className="card-surface space-y-4 p-4">
-          <div className="space-y-3">
-            <CityField
-              label={t("from", lang)}
-              value={draft.from}
-              exclude={draft.to}
-              onChange={(v) => setDraft({ from: v })}
-            />
-            <div className="flex justify-center">
-              <Button
-                type="button"
-                variant="secondary"
-                size="icon"
-                aria-label={t("swap", lang)}
-                onClick={swap}
-                className="rounded-full"
-              >
-                <ArrowUpDown className="size-4" />
+        <Tabs defaultValue="new" dir={lang === "ar" ? "rtl" : "ltr"}>
+          <TabsList className="mb-3 h-12 w-full bg-card p-1 shadow-card">
+            <TabsTrigger value="new" className="h-10 flex-1">
+              {t("newBooking", lang)}
+            </TabsTrigger>
+            <TabsTrigger value="community" className="h-10 flex-1">
+              {t("communitySearch", lang)}
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="new" className="mt-0">
+            <div className="card-surface space-y-4 p-4">
+              <div className="space-y-3">
+                <CityField
+                  label={t("from", lang)}
+                  value={draft.from}
+                  exclude={draft.to}
+                  onChange={(v) => setDraft({ from: v })}
+                />
+                <div className="flex justify-center">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="icon"
+                    aria-label={t("swap", lang)}
+                    onClick={swap}
+                    className="rounded-full"
+                  >
+                    <ArrowUpDown className="size-4 rtl:-scale-x-100" />
+                  </Button>
+                </div>
+                <CityField
+                  label={t("to", lang)}
+                  value={draft.to}
+                  exclude={draft.from}
+                  onChange={(v) => setDraft({ to: v })}
+                />
+              </div>
+
+              <DateField value={draft.date} onChange={(date) => setDraft({ date })} lang={lang} />
+
+              <label className="flex items-start gap-3 rounded-lg border border-border p-3">
+                <Checkbox
+                  checked={draft.airport}
+                  onCheckedChange={(v) => setDraft({ airport: Boolean(v) })}
+                  className="mt-0.5"
+                />
+                <span className="text-sm">
+                  <span className="font-semibold">{t("airport", lang)}</span>
+                  <span className="mt-0.5 block text-xs text-muted-foreground">
+                    {t("maxRiders", lang)}: {maxRiders}
+                  </span>
+                </span>
+              </label>
+
+              <label className="flex items-start gap-3 rounded-lg border border-border p-3">
+                <Checkbox
+                  checked={draft.share}
+                  onCheckedChange={(v) => setDraft({ share: Boolean(v) })}
+                  className="mt-0.5"
+                />
+                <span className="flex-1 text-sm">
+                  <span className="flex flex-wrap items-center gap-2 font-semibold">
+                    {t("share", lang)} <SaveTag />
+                  </span>
+                  <span className="mt-0.5 block text-xs text-muted-foreground">
+                    {t("communityDesc", lang)}
+                  </span>
+                </span>
+              </label>
+
+              {error ? <p className="text-sm font-medium text-destructive">{error}</p> : null}
+
+              <Button size="lg" className="w-full text-base" onClick={submit}>
+                {t("explore", lang)}
               </Button>
             </div>
-            <CityField
-              label={t("to", lang)}
-              value={draft.to}
-              exclude={draft.from}
-              onChange={(v) => setDraft({ to: v })}
-            />
-          </div>
+          </TabsContent>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="date">{t("date", lang)}</Label>
-            <input
-              id="date"
-              type="date"
-              min={todayStr}
-              value={draft.date ?? ""}
-              onChange={(e) => setDraft({ date: e.target.value })}
-              className="h-12 w-full rounded-lg border border-input bg-card px-3 text-base text-foreground outline-none focus:ring-2 focus:ring-ring"
-            />
-          </div>
-
-          <label className="flex items-start gap-3 rounded-lg border border-border p-3">
-            <Checkbox
-              checked={draft.airport}
-              onCheckedChange={(v) => setDraft({ airport: Boolean(v) })}
-              className="mt-0.5"
-            />
-            <span className="text-sm">
-              <span className="font-semibold">{t("airport", lang)}</span>
-              <span className="mt-0.5 block text-xs text-muted-foreground">
-                {t("maxRiders", lang)}: {maxRiders}
-              </span>
-            </span>
-          </label>
-
-          <label className="flex items-start gap-3 rounded-lg border border-border p-3">
-            <Checkbox
-              checked={draft.share}
-              onCheckedChange={(v) => setDraft({ share: Boolean(v) })}
-              className="mt-0.5"
-            />
-            <span className="flex-1 text-sm">
-              <span className="flex items-center gap-2 font-semibold">
-                {t("share", lang)} <SaveTag />
-              </span>
-              <span className="mt-0.5 block text-xs text-muted-foreground">
-                {t("communityDesc", lang)}
-              </span>
-            </span>
-          </label>
-
-          {error ? <p className="text-sm font-medium text-destructive">{error}</p> : null}
-
-          <Button size="lg" className="w-full text-base" onClick={submit}>
-            {t("explore", lang)}
-          </Button>
-        </div>
+          <TabsContent value="community" className="mt-0">
+            <div className="card-surface space-y-4 p-4">
+              <p className="text-sm text-muted-foreground">{t("communitySearchHint", lang)}</p>
+              <CityField
+                label={t("from", lang)}
+                value={communityFrom}
+                exclude={communityTo}
+                onChange={setCommunityFrom}
+              />
+              <CityField
+                label={t("to", lang)}
+                value={communityTo}
+                exclude={communityFrom}
+                onChange={setCommunityTo}
+              />
+              <DateField value={communityDate} onChange={setCommunityDate} lang={lang} />
+              {communityError ? (
+                <p className="text-sm font-medium text-destructive">{communityError}</p>
+              ) : null}
+              <Button size="lg" className="w-full text-base" onClick={searchCommunity}>
+                <Users className="size-5" /> {t("searchRides", lang)}
+              </Button>
+            </div>
+          </TabsContent>
+        </Tabs>
 
         <h2 className="mb-2 mt-6 px-1 text-sm font-bold text-muted-foreground">
           {t("quickLinks", lang)}
@@ -196,12 +253,13 @@ function HomePage() {
           </Link>
         </div>
 
-        <button
+        <Button
+          variant="ghost"
           onClick={() => toast(t("demoNote", lang))}
           className="mt-6 w-full text-center text-xs text-muted-foreground"
         >
           {t("demoNote", lang)}
-        </button>
+        </Button>
       </div>
     </AppShell>
   );
