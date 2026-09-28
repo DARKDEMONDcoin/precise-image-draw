@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowRight, Car } from "lucide-react";
+import { ArrowLeft, Car } from "lucide-react";
 
 import { AppShell } from "@/components/limo/AppShell";
 import { Button } from "@/components/ui/button";
@@ -38,7 +38,7 @@ function AuthPage() {
   const sendCode = () => {
     const digits = phone.replace(/\D/g, "");
     if (digits.length < 10) {
-      setError(lang === "ar" ? "رقم الموبايل غير صحيح" : "Invalid mobile number");
+      setError(t("invalidPhone", lang));
       return;
     }
     setError(null);
@@ -50,7 +50,7 @@ function AuthPage() {
 
   const verify = (value: string) => {
     if (value !== demoCode) {
-      setError(lang === "ar" ? "الكود غير صحيح" : "Wrong code");
+      setError(t("wrongCode", lang));
       return;
     }
     setError(null);
@@ -59,10 +59,15 @@ function AuthPage() {
 
   const finish = () => {
     if (!name.trim()) {
-      setError(lang === "ar" ? "من فضلك اكتب اسمك" : "Please enter your name");
+      setError(t("enterName", lang));
       return;
     }
-    setUser({ phone: `+20${phone.replace(/\D/g, "")}`, name: name.trim(), email: email.trim() });
+    setUser({
+      phone: `+20${phone.replace(/\D/g, "")}`,
+      name: name.trim(),
+      email: email.trim(),
+      riderScore: 5,
+    });
     navigate({ to: "/" });
   };
 
@@ -95,13 +100,13 @@ function AuthPage() {
                   placeholder={t("phonePlaceholder", lang)}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 11))}
-                  className="h-14 flex-1 text-lg tracking-widest"
+                  className="h-14 flex-1 text-end text-lg tabular-nums"
                 />
               </div>
             </div>
             {error ? <p className="text-sm font-medium text-destructive">{error}</p> : null}
             <Button size="lg" className="w-full text-base" onClick={sendCode}>
-              {t("sendCode", lang)} <ArrowRight className="size-4 rtl:rotate-180" />
+              {t("sendCode", lang)} <ArrowLeft className="size-4 rtl:rotate-180" />
             </Button>
           </div>
         ) : null}
@@ -132,7 +137,7 @@ function AuthPage() {
             </div>
             <div className="rounded-lg bg-secondary p-3 text-center text-sm">
               <span className="text-muted-foreground">{t("demoCode", lang)}: </span>
-              <span className="text-lg font-bold tracking-widest">{demoCode}</span>
+              <span dir="ltr" className="text-lg font-bold tabular-nums">{demoCode}</span>
             </div>
             {error ? (
               <p className="text-center text-sm font-medium text-destructive">{error}</p>
@@ -140,13 +145,14 @@ function AuthPage() {
             <Button size="lg" className="w-full text-base" onClick={() => verify(code)}>
               {t("verify", lang)}
             </Button>
-            <button
-              className="w-full text-sm text-muted-foreground underline"
+            <Button
+              variant="link"
+              className="w-full text-sm text-muted-foreground"
               onClick={sendCode}
               type="button"
             >
               {t("resend", lang)}
-            </button>
+            </Button>
           </div>
         ) : null}
 
@@ -159,7 +165,7 @@ function AuthPage() {
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value.slice(0, 60))}
-                className="h-14 text-base"
+                className="h-14 text-start text-base"
               />
             </div>
             <div className="space-y-1.5">

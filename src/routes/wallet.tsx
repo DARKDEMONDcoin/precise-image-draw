@@ -34,12 +34,12 @@ function WalletPage() {
   const submit = () => {
     const value = Number(amount);
     if (!value || value <= 0 || value > 20000) {
-      toast.error(lang === "ar" ? "أدخل مبلغاً صحيحاً" : "Enter a valid amount");
+      toast.error(t("invalidAmount", lang));
       return;
     }
     topUp(value, t(method, lang));
     setAmount("");
-    toast.success(lang === "ar" ? "تم شحن الرصيد" : "Wallet topped up");
+    toast.success(t("topUpDone", lang));
   };
 
   return (

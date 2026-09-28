@@ -4,7 +4,16 @@ import { CAR_TIERS, basePrice, type CityId } from "./data";
 import { perSeat, riderCap } from "./pricing";
 import type { Lang } from "./i18n";
 
-export type User = { phone: string; name: string; email?: string };
+export type User = { phone: string; name: string; email?: string; riderScore: number };
+
+/** Reserved for the future approval flow; joining remains immediate in this prototype. */
+export type JoinRequest = {
+  id: string;
+  tripId: string;
+  rider: Pick<User, "phone" | "name" | "riderScore">;
+  status: "pending" | "accepted" | "rejected";
+  requestedAt: string;
+};
 
 export type Draft = {
   from: CityId | null;
@@ -67,6 +76,7 @@ type State = {
   shared: SharedTrip[];
   returns: ReturnTrip[];
   notifications: boolean;
+  onboardingSeen: boolean;
 };
 
 const today = new Date();
@@ -142,6 +152,7 @@ const initial: State = {
     mkReturn("r3", "cairo", "mansoura", 3, "20:00 – 23:00", "economy"),
   ],
   notifications: true,
+  onboardingSeen: false,
 };
 
 const KEY = "limo-state-v1";
@@ -153,6 +164,7 @@ type Ctx = State & {
   setDraft: (d: Partial<Draft>) => void;
   resetDraft: () => void;
   setNotifications: (v: boolean) => void;
+  completeOnboarding: () => void;
   topUp: (amount: number, method: string) => void;
   book: (args: { tierId: string; base: number; paid: number; walletUsed: number }) => void;
   joinShared: (id: string) => void;
@@ -167,7 +179,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(KEY);
-      if (raw) setState({ ...initial, ...(JSON.parse(raw) as State) });
+      if (raw) {
+        const saved = JSON.parse(raw) as Partial<State>;
+        const user = saved.user ? { ...saved.user, riderScore: saved.user.riderScore ?? 5 } : null;
+        setState({ ...initial, ...saved, user });
+      }
     } catch {
       /* ignore */
     }
@@ -199,6 +215,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     (notifications: boolean) => setState((s) => ({ ...s, notifications })),
     [],
   );
+  const completeOnboarding = useCallback(
+    () => setState((s) => ({ ...s, onboardingSeen: true })),
+    [],
+  );
 
   const topUp = useCallback((amount: number, method: string) => {
     setState((s) => ({
@@ -216,9 +236,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const d = s.draft;
       const trip: Trip = {
         id: crypto.randomUUID(),
-        from: d.from!,
-        to: d.to!,
-        date: d.date!,
+        from: d.from ?? "tanta",
+        to: d.to ?? "cairo",
+        date: d.date ?? iso(new Date()),
         tierId,
         paid,
         status: d.share ? "shared" : "confirmed",
@@ -342,11 +362,23 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setDraft,
       resetDraft,
       setNotifications,
+      completeOnboarding,
       topUp,
       book,
       joinShared,
     }),
-    [state, setLang, setUser, setDraft, resetDraft, setNotifications, topUp, book, joinShared],
+    [
+      state,
+      setLang,
+      setUser,
+      setDraft,
+      resetDraft,
+      setNotifications,
+      completeOnboarding,
+      topUp,
+      book,
+      joinShared,
+    ],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

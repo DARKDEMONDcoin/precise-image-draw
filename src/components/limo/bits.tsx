@@ -7,6 +7,7 @@ export function SaveTag({ className }: { className?: string }) {
   const { lang } = useStore();
   return (
     <span
+      data-save-tag
       className={cn(
         "inline-flex items-center rounded-full bg-gold px-2.5 py-1 text-[11px] font-bold text-gold-foreground",
         className,

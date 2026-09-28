@@ -1,9 +1,10 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell, PageHeader } from "@/components/limo/AppShell";
+import { formatAppDate } from "@/components/limo/DateField";
 import { Perks, SaveTag } from "@/components/limo/bits";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -35,10 +36,11 @@ function CheckoutPage() {
     if (!ready && !submitted) navigate({ to: "/" });
   }, [ready, submitted, navigate]);
 
-  if (!ready) return null;
+  if (!ready || !draft.from || !draft.to || !draft.tierId) return null;
 
-  const tier = CAR_TIERS.find((c) => c.id === draft.tierId)!;
-  const base = draft.fixedPrice ?? basePrice(draft.from!, draft.to!, tier);
+  const tier = CAR_TIERS.find((c) => c.id === draft.tierId);
+  if (!tier) return null;
+  const base = draft.fixedPrice ?? basePrice(draft.from, draft.to, tier);
   const total = base;
   const walletUsed = useWallet ? Math.min(wallet, total) : 0;
   const remaining = total - walletUsed;
@@ -57,7 +59,7 @@ function CheckoutPage() {
         action={
           <Button asChild variant="ghost" size="sm">
             <Link to="/options">
-              {t("back", lang)} <ArrowRight className="size-4 rtl:rotate-180" />
+              {t("back", lang)} <ArrowLeft className="size-4 rtl:rotate-180" />
             </Link>
           </Button>
         }
@@ -66,9 +68,9 @@ function CheckoutPage() {
       <div className="space-y-4 px-4">
         <div className="card-surface space-y-3 p-4">
           <Row label={t("route", lang)}>
-            {cityName(draft.from!, lang)} ← {cityName(draft.to!, lang)}
+            {cityName(draft.from, lang)} ← {cityName(draft.to, lang)}
           </Row>
-          <Row label={t("date", lang)}>{draft.date}</Row>
+          <Row label={t("date", lang)}>{formatAppDate(draft.date, lang)}</Row>
           <Row label={t("car", lang)}>{lang === "ar" ? tier.ar : tier.en}</Row>
           <Row label={t("maxRiders", lang)}>{draft.airport ? 2 : 3}</Row>
           <Perks />

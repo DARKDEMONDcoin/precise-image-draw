@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { CarFront, LogOut, Settings as SettingsIcon, Wallet as WalletIcon } from "lucide-react";
+import { CarFront, LogOut, Settings as SettingsIcon, Star, Wallet as WalletIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell, PageHeader } from "@/components/limo/AppShell";
@@ -55,6 +55,19 @@ function ProfilePage() {
     <AppShell>
       <PageHeader title={t("profile", lang)} />
       <div className="space-y-4 px-4">
+        <div className="card-surface flex items-center justify-between p-4">
+          <div>
+            <p className="text-sm font-bold">{t("riderScore", lang)}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{t("scoreOutOf", lang)}</p>
+          </div>
+          <div className="flex items-center gap-2 text-gold-foreground">
+            <Star className="size-5 fill-gold text-gold" />
+            <span dir="ltr" className="text-2xl font-extrabold tabular-nums">
+              {user.riderScore.toFixed(1)}
+            </span>
+          </div>
+        </div>
+
         <div className="card-surface space-y-4 p-4">
           <div className="space-y-1.5">
             <Label htmlFor="pname">{t("name", lang)}</Label>

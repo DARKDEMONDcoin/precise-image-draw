@@ -20,6 +20,15 @@ export const dict = {
   back: { ar: "رجوع", en: "Back" },
   // booking
   bookTrip: { ar: "احجز رحلتك", en: "Book your ride" },
+  newBooking: { ar: "حجز جديد", en: "New Booking" },
+  communitySearch: { ar: "الرحلات المجتمعية", en: "Community Rides" },
+  communitySearchHint: {
+    ar: "ابحث عن رحلة فتحها راكب آخر للمشاركة",
+    en: "Find a ride another passenger opened for sharing",
+  },
+  searchRides: { ar: "بحث عن رحلات", en: "Search rides" },
+  searchResults: { ar: "نتائج البحث", en: "Search results" },
+  clearSearch: { ar: "عرض كل الرحلات", en: "Show all rides" },
   from: { ar: "من مدينة", en: "From city" },
   to: { ar: "إلى مدينة", en: "To city" },
   chooseCity: { ar: "اختر المدينة", en: "Choose a city" },
@@ -71,6 +80,8 @@ export const dict = {
     en: "Check back soon, or book a ride and open it for sharing",
   },
   joined: { ar: "تم الانضمام للرحلة", en: "You joined the ride" },
+  riderScore: { ar: "تقييم الراكب", en: "Rider score" },
+  scoreOutOf: { ar: "من 5", en: "out of 5" },
   // returns
   returns: { ar: "رحلات العودة", en: "Return Trips" },
   returnsDesc: {
@@ -125,6 +136,12 @@ export const dict = {
     ar: "نسخة تجريبية — البيانات والأسعار مبدئية",
     en: "Demo build — sample data and placeholder prices",
   },
+  invalidPhone: { ar: "رقم الموبايل غير صحيح", en: "Invalid mobile number" },
+  wrongCode: { ar: "الكود غير صحيح", en: "Wrong code" },
+  enterName: { ar: "من فضلك اكتب اسمك", en: "Please enter your name" },
+  invalidAmount: { ar: "أدخل مبلغاً صحيحاً", en: "Enter a valid amount" },
+  topUpDone: { ar: "تم شحن الرصيد", en: "Wallet topped up" },
+  supportPhone: { ar: "الدعم: ١٦٠٠٠", en: "Support: 16000" },
 } as const;
 
 export type Key = keyof typeof dict;

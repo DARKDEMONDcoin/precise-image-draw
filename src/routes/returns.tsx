@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { CalendarDays, Clock, Info } from "lucide-react";
 
 import { AppShell, PageHeader } from "@/components/limo/AppShell";
+import { formatAppDate } from "@/components/limo/DateField";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CAR_TIERS, cityName } from "@/lib/limo/data";
@@ -39,7 +40,8 @@ function ReturnsPage() {
         </div>
 
         {returns.map((trip) => {
-          const tier = CAR_TIERS.find((c) => c.id === trip.tierId)!;
+          const tier = CAR_TIERS.find((c) => c.id === trip.tierId);
+          if (!tier) return null;
           const off = Math.round((1 - trip.price / trip.base) * 100);
           return (
             <div key={trip.id} className="card-surface space-y-3 p-4">
@@ -50,7 +52,7 @@ function ReturnsPage() {
                   </h3>
                   <p className="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-1">
-                      <CalendarDays className="size-3.5" /> {trip.date}
+                      <CalendarDays className="size-3.5" /> {formatAppDate(trip.date, lang)}
                     </span>
                     <span className="inline-flex items-center gap-1">
                       <Clock className="size-3.5" /> {t("approxWindow", lang)}: {trip.window}

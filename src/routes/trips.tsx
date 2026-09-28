@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { AppShell, PageHeader } from "@/components/limo/AppShell";
+import { formatAppDate } from "@/components/limo/DateField";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CAR_TIERS, cityName } from "@/lib/limo/data";
@@ -30,7 +31,7 @@ function TripsPage() {
     <AppShell>
       <PageHeader title={t("myTrips", lang)} />
       <div className="px-4">
-        <Tabs defaultValue="upcoming">
+         <Tabs defaultValue="upcoming" dir={lang === "ar" ? "rtl" : "ltr"}>
           <TabsList className="w-full">
             <TabsTrigger value="upcoming" className="flex-1">
               {t("upcoming", lang)}
@@ -85,7 +86,7 @@ function TripList({ trips }: { trips: Trip[] }) {
               </Badge>
             </div>
             <p className="text-xs text-muted-foreground">
-              {tr.date} · {tier ? (lang === "ar" ? tier.ar : tier.en) : ""}
+               {formatAppDate(tr.date, lang)} · {tier ? (lang === "ar" ? tier.ar : tier.en) : ""}
             </p>
             <p className="text-sm">
               <span className="text-muted-foreground">{t("paid", lang)}: </span>
