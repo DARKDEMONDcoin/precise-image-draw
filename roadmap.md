@@ -6,4 +6,4 @@
 - [x] Add shared-booking savings tag to each car card.
 - [x] Add rider score and future join-request data shape.
 - [x] Audit and fix Arabic, RTL, dates, icons, and global messages.
-- [ ] Verify primary flows and responsive layouts.
+- [x] Verify primary flows and responsive layouts.

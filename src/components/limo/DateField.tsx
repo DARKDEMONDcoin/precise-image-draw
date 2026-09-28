@@ -1,5 +1,6 @@
 import { CalendarDays } from "lucide-react";
 import { arSA, enUS } from "date-fns/locale";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -22,7 +23,7 @@ const toIso = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
-export function formatAppDate(value: string, lang: Lang) {
+export function formatAppDate(value: string | null, lang: Lang) {
   const date = fromIso(value);
   if (!date) return value;
   return new Intl.DateTimeFormat(lang === "ar" ? "ar-EG" : "en-US", {
@@ -43,13 +44,14 @@ export function DateField({
   lang: Lang;
 }) {
   const selected = fromIso(value);
+  const [open, setOpen] = useState(false);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   return (
     <div className="space-y-1.5">
       <Label>{t("date", lang)}</Label>
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             type="button"
@@ -67,7 +69,11 @@ export function DateField({
           <Calendar
             mode="single"
             selected={selected}
-            onSelect={(date) => date && onChange(toIso(date))}
+            onSelect={(date) => {
+              if (!date) return;
+              onChange(toIso(date));
+              setOpen(false);
+            }}
             disabled={{ before: today }}
             locale={lang === "ar" ? arSA : enUS}
             dir={lang === "ar" ? "rtl" : "ltr"}
