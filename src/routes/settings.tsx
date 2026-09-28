@@ -56,7 +56,7 @@ function SettingsPage() {
         <Button
           variant="secondary"
           className="w-full"
-          onClick={() => toast(lang === "ar" ? "الدعم: 16000" : "Support: 16000")}
+          onClick={() => toast(t("supportPhone", lang))}
         >
           <LifeBuoy className="size-4" /> {t("help", lang)}
         </Button>
