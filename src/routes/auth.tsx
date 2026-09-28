@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowRight, Car } from "lucide-react";
+import { ArrowLeft, Car } from "lucide-react";
 
 import { AppShell } from "@/components/limo/AppShell";
 import { Button } from "@/components/ui/button";
@@ -106,7 +106,7 @@ function AuthPage() {
             </div>
             {error ? <p className="text-sm font-medium text-destructive">{error}</p> : null}
             <Button size="lg" className="w-full text-base" onClick={sendCode}>
-              {t("sendCode", lang)} <ArrowRight className="size-4 rtl:rotate-180" />
+              {t("sendCode", lang)} <ArrowLeft className="size-4 rtl:rotate-180" />
             </Button>
           </div>
         ) : null}
@@ -145,13 +145,14 @@ function AuthPage() {
             <Button size="lg" className="w-full text-base" onClick={() => verify(code)}>
               {t("verify", lang)}
             </Button>
-            <button
-              className="w-full text-sm text-muted-foreground underline"
+            <Button
+              variant="link"
+              className="w-full text-sm text-muted-foreground"
               onClick={sendCode}
               type="button"
             >
               {t("resend", lang)}
-            </button>
+            </Button>
           </div>
         ) : null}
 

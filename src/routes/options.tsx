@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { ArrowRight, Users, Car } from "lucide-react";
+import { ArrowLeft, Users, Car } from "lucide-react";
 
 import { AppShell, PageHeader } from "@/components/limo/AppShell";
 import { Perks, SaveTag } from "@/components/limo/bits";
@@ -34,17 +34,19 @@ function OptionsPage() {
 
   if (!ready || !draft.from || !draft.to) return null;
 
+  const from = draft.from;
+  const to = draft.to;
   const cap = riderCap(draft.airport);
 
   return (
     <AppShell>
       <PageHeader
         title={t("chooseCar", lang)}
-        subtitle={`${cityName(draft.from, lang)} ← ${cityName(draft.to, lang)} · ${draft.date}`}
+        subtitle={`${cityName(from, lang)} ← ${cityName(to, lang)} · ${draft.date}`}
         action={
           <Button asChild variant="ghost" size="sm">
             <Link to="/">
-              {t("back", lang)} <ArrowRight className="size-4 rtl:rotate-180" />
+              {t("back", lang)} <ArrowLeft className="size-4 rtl:rotate-180" />
             </Link>
           </Button>
         }
@@ -52,7 +54,7 @@ function OptionsPage() {
 
       <div className="space-y-3 px-4">
         {CAR_TIERS.map((tier) => {
-          const base = basePrice(draft.from, draft.to, tier);
+          const base = basePrice(from, to, tier);
           const shared2 = perSeat(base, 2);
           const low = bestPrice(base, draft.airport);
           return (

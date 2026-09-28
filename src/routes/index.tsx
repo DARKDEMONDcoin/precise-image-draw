@@ -241,7 +241,11 @@ function HomePage() {
           {t("quickLinks", lang)}
         </h2>
         <div className="grid grid-cols-2 gap-3">
-          <Link to="/community" className="card-surface flex flex-col gap-2 p-4">
+          <Link
+            to="/community"
+            search={{ from: undefined, to: undefined, date: undefined }}
+            className="card-surface flex flex-col gap-2 p-4"
+          >
             <Users className="size-5 text-primary" />
             <span className="text-sm font-bold">{t("community", lang)}</span>
             <span className="text-xs text-muted-foreground">{t("communityDesc", lang)}</span>

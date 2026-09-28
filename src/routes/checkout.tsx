@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell, PageHeader } from "@/components/limo/AppShell";
@@ -58,7 +58,7 @@ function CheckoutPage() {
         action={
           <Button asChild variant="ghost" size="sm">
             <Link to="/options">
-              {t("back", lang)} <ArrowRight className="size-4 rtl:rotate-180" />
+              {t("back", lang)} <ArrowLeft className="size-4 rtl:rotate-180" />
             </Link>
           </Button>
         }
