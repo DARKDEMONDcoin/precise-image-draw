@@ -43,12 +43,13 @@ const Carousel = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement> & CarouselProps
 >(({ orientation = "horizontal", opts, setApi, plugins, className, children, ...props }, ref) => {
   const rtl = props.dir === "rtl";
+  const carouselOptions: CarouselOptions = {
+    ...opts,
+    axis: orientation === "horizontal" ? "x" : "y",
+    ...(rtl ? { direction: "rtl" as const } : {}),
+  };
   const [carouselRef, api] = useEmblaCarousel(
-    {
-      ...opts,
-      axis: orientation === "horizontal" ? "x" : "y",
-      direction: rtl ? "rtl" : opts?.direction,
-    },
+    carouselOptions,
     plugins,
   );
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);

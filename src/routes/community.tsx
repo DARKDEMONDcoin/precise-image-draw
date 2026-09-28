@@ -12,15 +12,15 @@ import { formatEGP, perSeat, riderCap } from "@/lib/limo/pricing";
 import { useStore } from "@/lib/limo/store";
 import type { CityId } from "@/lib/limo/data";
 
-type CommunitySearch = { from?: CityId; to?: CityId; date?: string };
+type CommunitySearch = { from: CityId | undefined; to: CityId | undefined; date: string | undefined };
 const CITY_IDS: CityId[] = ["tanta", "cairo", "alexandria", "mansoura", "kafr"];
 
 export const Route = createFileRoute("/community")({
   validateSearch: (search: Record<string, unknown>): CommunitySearch => ({
-    from: CITY_IDS.includes(search.from as CityId) ? (search.from as CityId) : undefined,
-    to: CITY_IDS.includes(search.to as CityId) ? (search.to as CityId) : undefined,
-    date: typeof search.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(search.date)
-      ? search.date
+    from: CITY_IDS.includes(search["from"] as CityId) ? (search["from"] as CityId) : undefined,
+    to: CITY_IDS.includes(search["to"] as CityId) ? (search["to"] as CityId) : undefined,
+    date: typeof search["date"] === "string" && /^\d{4}-\d{2}-\d{2}$/.test(search["date"])
+      ? search["date"]
       : undefined,
   }),
   head: () => ({
@@ -57,7 +57,9 @@ function CommunityPage() {
           <div className="flex items-center justify-between gap-3 rounded-lg bg-secondary p-3 text-sm">
             <span className="font-semibold">{t("searchResults", lang)}</span>
             <Button asChild variant="ghost" size="sm">
-              <Link to="/community" search={{}}>{t("clearSearch", lang)}</Link>
+              <Link to="/community" search={{ from: undefined, to: undefined, date: undefined }}>
+                {t("clearSearch", lang)}
+              </Link>
             </Button>
           </div>
         ) : null}

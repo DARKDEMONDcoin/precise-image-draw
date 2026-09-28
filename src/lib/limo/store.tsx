@@ -181,7 +181,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const raw = localStorage.getItem(KEY);
       if (raw) {
         const saved = JSON.parse(raw) as Partial<State>;
-        const user = saved.user ? { riderScore: 5, ...saved.user } : null;
+        const user = saved.user ? { ...saved.user, riderScore: saved.user.riderScore ?? 5 } : null;
         setState({ ...initial, ...saved, user });
       }
     } catch {

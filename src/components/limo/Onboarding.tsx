@@ -35,7 +35,7 @@ export function Onboarding({ onComplete }: { onComplete: () => void }) {
   const [index, setIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const last = index === slides.length - 1;
-  const slide = slides[index];
+  const slide = slides[index] ?? slides[0];
 
   const move = (next: number) => setIndex(Math.max(0, Math.min(slides.length - 1, next)));
 

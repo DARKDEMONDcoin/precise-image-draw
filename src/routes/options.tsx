@@ -40,7 +40,7 @@ function OptionsPage() {
     <AppShell>
       <PageHeader
         title={t("chooseCar", lang)}
-        subtitle={`${cityName(draft.from!, lang)} ← ${cityName(draft.to!, lang)} · ${draft.date}`}
+        subtitle={`${cityName(draft.from, lang)} ← ${cityName(draft.to, lang)} · ${draft.date}`}
         action={
           <Button asChild variant="ghost" size="sm">
             <Link to="/">
@@ -66,7 +66,9 @@ function OptionsPage() {
                     <div className="flex items-center gap-2">
                       <h3 className="text-base font-bold">{lang === "ar" ? tier.ar : tier.en}</h3>
                       {tier.premium ? (
-                        <Badge className="bg-gold text-gold-foreground hover:bg-gold">VIP</Badge>
+                        <Badge className="bg-gold text-gold-foreground hover:bg-gold">
+                          {lang === "ar" ? "فئة كبار الشخصيات" : "VIP"}
+                        </Badge>
                       ) : null}
                     </div>
                     <p className="text-xs text-muted-foreground">
