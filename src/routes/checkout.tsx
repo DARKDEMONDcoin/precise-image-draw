@@ -4,6 +4,7 @@ import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell, PageHeader } from "@/components/limo/AppShell";
+import { formatAppDate } from "@/components/limo/DateField";
 import { Perks, SaveTag } from "@/components/limo/bits";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -69,7 +70,7 @@ function CheckoutPage() {
           <Row label={t("route", lang)}>
             {cityName(draft.from, lang)} ← {cityName(draft.to, lang)}
           </Row>
-          <Row label={t("date", lang)}>{draft.date}</Row>
+          <Row label={t("date", lang)}>{formatAppDate(draft.date, lang)}</Row>
           <Row label={t("car", lang)}>{lang === "ar" ? tier.ar : tier.en}</Row>
           <Row label={t("maxRiders", lang)}>{draft.airport ? 2 : 3}</Row>
           <Perks />

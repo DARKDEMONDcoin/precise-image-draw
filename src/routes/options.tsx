@@ -102,8 +102,6 @@ function OptionsPage() {
 
               <Perks />
 
-              {draft.share ? <SaveTag /> : null}
-
               {draft.share ? (
                 <div className="flex flex-wrap items-center gap-2 rounded-lg bg-success/10 p-2.5 text-xs font-medium text-success">
                   <SaveTag />

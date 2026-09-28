@@ -100,7 +100,7 @@ function AuthPage() {
                   placeholder={t("phonePlaceholder", lang)}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 11))}
-                  className="h-14 flex-1 text-right text-lg tabular-nums"
+                  className="h-14 flex-1 text-end text-lg tabular-nums"
                 />
               </div>
             </div>
@@ -165,7 +165,7 @@ function AuthPage() {
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value.slice(0, 60))}
-                className="h-14 text-right text-base"
+                className="h-14 text-start text-base"
               />
             </div>
             <div className="space-y-1.5">
