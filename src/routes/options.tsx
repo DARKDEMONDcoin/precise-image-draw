@@ -32,7 +32,7 @@ function OptionsPage() {
     if (!ready) navigate({ to: "/" });
   }, [ready, navigate]);
 
-  if (!ready) return null;
+  if (!ready || !draft.from || !draft.to) return null;
 
   const cap = riderCap(draft.airport);
 
@@ -52,7 +52,7 @@ function OptionsPage() {
 
       <div className="space-y-3 px-4">
         {CAR_TIERS.map((tier) => {
-          const base = basePrice(draft.from!, draft.to!, tier);
+          const base = basePrice(draft.from, draft.to, tier);
           const shared2 = perSeat(base, 2);
           const low = bestPrice(base, draft.airport);
           return (
@@ -77,7 +77,7 @@ function OptionsPage() {
                     </p>
                   </div>
                 </div>
-                <div className="text-left rtl:text-right">
+                <div className="text-start">
                   {draft.share ? (
                     <>
                       <div className="text-xs text-muted-foreground line-through">
@@ -97,6 +97,8 @@ function OptionsPage() {
               </div>
 
               <Perks />
+
+              {draft.share ? <SaveTag /> : null}
 
               {draft.share ? (
                 <div className="flex flex-wrap items-center gap-2 rounded-lg bg-success/10 p-2.5 text-xs font-medium text-success">

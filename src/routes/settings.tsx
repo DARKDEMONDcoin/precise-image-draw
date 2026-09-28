@@ -32,18 +32,14 @@ function SettingsPage() {
           <p className="text-sm font-bold">{t("language", lang)}</p>
           <div className="grid grid-cols-2 gap-2">
             {(["ar", "en"] as const).map((l) => (
-              <button
+              <Button
                 key={l}
                 onClick={() => setLang(l)}
-                className={cn(
-                  "rounded-lg border px-3 py-3 text-sm font-semibold transition-colors",
-                  lang === l
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-card text-foreground",
-                )}
+                variant={lang === l ? "default" : "outline"}
+                className={cn("h-12", lang === l && "border-primary")}
               >
                 {l === "ar" ? "العربية" : "English"}
-              </button>
+              </Button>
             ))}
           </div>
         </div>

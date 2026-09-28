@@ -35,10 +35,11 @@ function CheckoutPage() {
     if (!ready && !submitted) navigate({ to: "/" });
   }, [ready, submitted, navigate]);
 
-  if (!ready) return null;
+  if (!ready || !draft.from || !draft.to || !draft.tierId) return null;
 
-  const tier = CAR_TIERS.find((c) => c.id === draft.tierId)!;
-  const base = draft.fixedPrice ?? basePrice(draft.from!, draft.to!, tier);
+  const tier = CAR_TIERS.find((c) => c.id === draft.tierId);
+  if (!tier) return null;
+  const base = draft.fixedPrice ?? basePrice(draft.from, draft.to, tier);
   const total = base;
   const walletUsed = useWallet ? Math.min(wallet, total) : 0;
   const remaining = total - walletUsed;
@@ -66,7 +67,7 @@ function CheckoutPage() {
       <div className="space-y-4 px-4">
         <div className="card-surface space-y-3 p-4">
           <Row label={t("route", lang)}>
-            {cityName(draft.from!, lang)} ← {cityName(draft.to!, lang)}
+            {cityName(draft.from, lang)} ← {cityName(draft.to, lang)}
           </Row>
           <Row label={t("date", lang)}>{draft.date}</Row>
           <Row label={t("car", lang)}>{lang === "ar" ? tier.ar : tier.en}</Row>
